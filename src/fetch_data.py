@@ -11,7 +11,3 @@ def fetch_data():
 
 if __name__ == "__main__":
     fetch_data()
-git add src/fetch_data.py
-git commit -m "Add initial data fetching script"
-git push -u origin feature-data-cleaning
-git push
