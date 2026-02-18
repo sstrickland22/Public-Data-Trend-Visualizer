@@ -1,40 +1,54 @@
-# Public AI Data Cleaning Pipeline
+# Public Data Trend Visualizer
 
-This project pulls public AI-related datasets and performs data cleaning and preprocessing
-to make them ready for analysis or model training.
+An interactive data visualization tool that displays public data trends across multiple sectors from 2000–2025.
 
-🚧 This project is under active development.
+## 🌐 Live Demo
+[View Live Chart](https://sstrickland22.github.io/Public-Data-Trend-Visualizer)
 
-## What This Project Does
-- Fetches public AI datasets from open sources
-- Cleans raw data (missing values, duplicates, formatting issues)
-- Standardizes fields for easier downstream use
-- Outputs cleaned datasets for analysis or modeling
+## 📊 What It Shows
+This chart visualizes growth trends across three sectors:
+- **Technology** - Fastest growing sector (100 → 360)
+- **Healthcare** - Steady consistent growth (80 → 260)
+- **Education** - Gradual stable growth (60 → 185)
 
-## Data Sources
-- Public AI datasets (e.g., open datasets, public APIs)
-- Specific sources will be documented as they are added
+## ✨ Features
+- 📈 Multi-line chart with 3 datasets
+- 🔵 Interactive data points on each line
+- 💬 Tooltips showing Year and Value on hover
+- 👆 Click legend to toggle lines on/off
+- 📊 Data summary cards
+- 🗂 Color coded legend with descriptions
+- 📱 Clean responsive layout
 
-## Tech Stack
-- Python
-- Pandas / NumPy
-- Requests (or other data-fetching libraries)
+## 🗂 Project Structure
+Public-Data-Trend-Visualizer/
+├── index.html          # Main page with legend and layout
+├── script.js           # D3.js chart logic
+├── style.css           # Styling
+├── data.csv            # Dataset (Technology, Healthcare, Education)
+├── data_cleaning/      # Data cleaning scripts
+│   ├── cleaning_functions.py
+│   └── init.py
+├── tests/              # Test files
+├── requirements.txt    # Python dependencies
+└── README.md           # Project documentation
 
-## Project Structure
-```text
-.
-├── data/
-│   ├── raw/
-│   └── cleaned/
-├── src/
-│   ├── fetch_data.py
-│   └── clean_data.py
-├── requirements.txt
-└── README.md
-```
-## Run the pipeline
+## 🛠 Built With
+- [D3.js v7](https://d3js.org/) - Data visualization
+- HTML/CSS/JavaScript - Frontend
+- Python - Data cleaning pipeline
+- GitHub Pages - Deployment
+
+## 🚀 Run Locally
 ```bash
-pip install -r requirements.txt
-python src/fetch_data.py
-python src/clean_data.py
-```
+# Clone the repo
+git clone https://github.com/sstrickland22/Public-Data-Trend-Visualizer.git
+
+# Navigate to project
+cd Public-Data-Trend-Visualizer
+
+# Start local server
+python3 -m http.server 8000
+
+# Open in browser
+http://localhost:8000
