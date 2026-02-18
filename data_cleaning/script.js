@@ -1,13 +1,9 @@
-// script.js
+console.log("script.js is running!");
 
-console.log("script.js is running!"); // This line should appear in your console!
-
-// 1. Set up dimensions and margins for the chart
-const margin = { top: 40, right: 30, bottom: 60, left: 70 };
+const margin = { top: 60, right: 150, bottom: 60, left: 70 };
 const width = 960 - margin.left - margin.right;
 const height = 500 - margin.top - margin.bottom;
 
-// 2. Select the chart container from index.html and append the SVG element
 const svg = d3.select("#chart-container")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -15,51 +11,143 @@ const svg = d3.select("#chart-container")
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// 3. Load the data from data.csv
+// Tooltip
+const tooltip = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("background", "#fff")
+    .style("border", "1px solid #ccc")
+    .style("padding", "8px")
+    .style("border-radius", "4px")
+    .style("font-size", "13px")
+    .style("pointer-events", "none")
+    .style("opacity", 0);
+
+// Colors for each line
+const colors = {
+    Technology: "steelblue",
+    Healthcare: "green",
+    Education: "orange"
+};
+
 d3.csv("data.csv").then(function(data) {
 
-    // 4. Parse the data: Convert 'Year' and 'Value' from strings to numbers
+    // Parse data
     data.forEach(function(d) {
         d.Year = +d.Year;
-        d.Value = +d.Value;
+        d.Technology = +d.Technology;
+        d.Healthcare = +d.Healthcare;
+        d.Education = +d.Education;
     });
 
-    // Optional: Sort data by year to ensure the line connects points in the correct chronological order.
-    data.sort((a, b) => a.Year - b.Year);
+    const categories = ["Technology", "Healthcare", "Education"];
 
-    // 5. Define X Scale (for the 'Year' data)
+    // X Scale
     const xScale = d3.scaleLinear()
         .domain(d3.extent(data, d => d.Year))
         .range([0, width]);
 
-    // 6. Define Y Scale (for the 'Value' data)
+    // Y Scale
     const yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.Value)])
+        .domain([0, d3.max(data, d => Math.max(d.Technology, d.Healthcare, d.Education))])
         .range([height, 0]);
 
-    // 7. Add X-axis to the SVG
+    // X Axis
     svg.append("g")
         .attr("transform", `translate(0,${height})`)
         .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
 
-    // 8. Add Y-axis to the SVG
+    // Y Axis
     svg.append("g")
         .call(d3.axisLeft(yScale));
 
-    // 9. Create the line generator
-    const line = d3.line()
-        .x(d => xScale(d.Year))
-        .y(d => yScale(d.Value));
+    // Draw lines and dots for each category
+    categories.forEach(function(category) {
 
-    // 10. Draw the line path on the SVG
-    svg.append("path")
-        .datum(data)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 2)
-        .attr("d", line);
+        // Line
+        const line = d3.line()
+            .x(d => xScale(d.Year))
+            .y(d => yScale(d[category]));
 
-    // 11. Add X-axis label
+        svg.append("path")
+            .datum(data)
+            .attr("fill", "none")
+            .attr("stroke", colors[category])
+            .attr("stroke-width", 2)
+            .attr("class", `line-${category}`)
+            .attr("d", line);
+
+        // Data Points
+        svg.selectAll(`.dot-${category}`)
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("class", `dot-${category}`)
+            .attr("cx", d => xScale(d.Year))
+            .attr("cy", d => yScale(d[category]))
+            .attr("r", 5)
+            .attr("fill", colors[category])
+            .attr("stroke", "#fff")
+            .attr("stroke-width", 2)
+
+            // Tooltip on hover
+            .on("mouseover", function(event, d) {
+                d3.select(this)
+                    .attr("r", 8)
+                    .attr("fill", "orange");
+                tooltip
+                    .style("opacity", 1)
+                    .html(`
+                        <strong>${category}</strong><br>
+                        <strong>Year:</strong> ${d.Year}<br>
+                        <strong>Value:</strong> ${d[category]}
+                    `);
+            })
+            .on("mousemove", function(event) {
+                tooltip
+                    .style("left", (event.pageX + 15) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function() {
+                d3.select(this)
+                    .attr("r", 5)
+                    .attr("fill", colors[category]);
+                tooltip.style("opacity", 0);
+            });
+    });
+
+    // 👈 INTERACTIVE: Toggle lines on/off with legend
+    const legend = svg.selectAll(".legend")
+        .data(categories)
+        .enter()
+        .append("g")
+        .attr("class", "legend")
+        .attr("transform", (d, i) => `translate(${width + 20}, ${i * 30})`)
+        .style("cursor", "pointer")
+        .on("click", function(event, category) {
+            const line = d3.selectAll(`.line-${category}`);
+            const dots = d3.selectAll(`.dot-${category}`);
+            const active = line.style("opacity") === "1" || line.style("opacity") === "";
+            line.style("opacity", active ? 0 : 1);
+            dots.style("opacity", active ? 0 : 1);
+            d3.select(this).select("text")
+                .style("text-decoration", active ? "line-through" : "none");
+        });
+
+    // Legend colored boxes
+    legend.append("rect")
+        .attr("width", 15)
+        .attr("height", 15)
+        .attr("fill", d => colors[d]);
+
+    // Legend text
+    legend.append("text")
+        .attr("x", 20)
+        .attr("y", 12)
+        .style("font-size", "13px")
+        .text(d => d);
+
+    // X Label
     svg.append("text")
         .attr("x", width / 2)
         .attr("y", height + margin.bottom - 10)
@@ -67,7 +155,7 @@ d3.csv("data.csv").then(function(data) {
         .style("font-size", "14px")
         .text("Year");
 
-    // 12. Add Y-axis label
+    // Y Label
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", -margin.left + 20)
@@ -76,7 +164,7 @@ d3.csv("data.csv").then(function(data) {
         .style("font-size", "14px")
         .text("Value");
 
-    // 13. Add Chart Title
+    // Title
     svg.append("text")
         .attr("x", width / 2)
         .attr("y", -margin.top / 2 + 10)
@@ -87,5 +175,5 @@ d3.csv("data.csv").then(function(data) {
 
 }).catch(function(error){
     console.error("Error loading or parsing data:", error);
-    d3.select("#chart-container").append("p").text("Failed to load data. Check console for details.");
+    d3.select("#chart-container").append("p").text("Failed to load data.");
 });
