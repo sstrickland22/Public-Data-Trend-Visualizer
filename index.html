@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Data Trend Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Chart Description Box */
+        .description {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .description h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .description p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Legend Box */
+        .legend-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-box h2 {
+            width: 100%;
+            margin-top: 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .legend-item-text h3 {
+            margin: 0 0 4px 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .legend-item-text p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Chart Container */
+        #chart-container {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        /* Data Summary Box */
+        .data-summary {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .data-summary h2 {
+            width: 100%;
+            margin-top: 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .summary-card {
+            flex: 1;
+            min-width: 150px;
+            background: #f4f4f4;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .summary-card p {
+            margin: 0;
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .summary-card span {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Public Data Trend Visualizer</h1>
+
+    <!-- Chart Description -->
+    <div class="description">
+        <h2>📊 About This Chart</h2>
+        <p>
+            This chart visualizes public data trends across three sectors —
+            <strong>Technology</strong>, <strong>Healthcare</strong>, and <strong>Education</strong> —
+            from <strong>2000 to 2025</strong>. Each line represents the growth of a sector over time.
+            Hover over any data point to see the exact year and value.
+            Click a category in the legend to toggle it on or off.
+        </p>
+    </div>
+
+    <!-- Legend Box -->
+    <div class="legend-box">
+        <h2>🗂 Legend</h2>
+
+        <div class="legend-item">
+            <div class="legend-color" style="background: steelblue;"></div>
+            <div class="legend-item-text">
+                <h3>Technology</h3>
+                <p>Tracks growth in the technology sector from 2000–2025.
+                Shows the fastest overall growth with values ranging from 100 to 360.</p>
+            </div>
+        </div>
+
+        <div class="legend-item">
+            <div class="legend-color" style="background: green;"></div>
+            <div class="legend-item-text">
+                <h3>Healthcare</h3>
+                <p>Tracks growth in the healthcare sector from 2000–2025.
+                Shows steady consistent growth with values ranging from 80 to 260.</p>
+            </div>
+        </div>
+
+        <div class="legend-item">
+            <div class="legend-color" style="background: orange;"></div>
+            <div class="legend-item-text">
+                <h3>Education</h3>
+                <p>Tracks growth in the education sector from 2000–2025.
+                Shows the most gradual growth with values ranging from 60 to 185.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div id="chart-container"></div>
+
+    <!-- Data Summary -->
+    <div class="data-summary">
+        <h2>📈 Data Summary</h2>
+
+        <div class="summary-card">
+            <h3>Time Period</h3>
+            <p>25 Years</p>
+            <span>2000 - 2025</span>
+        </div>
+
+        <div class="summary-card">
+            <h3>Data Points</h3>
+            <p>78</p>
+            <span>26 per category</span>
+        </div>
+
+        <div class="summary-card" style="border-top: 4px solid steelblue;">
+            <h3>Technology Peak</h3>
+            <p style="color: steelblue;">360</p>
+            <span>Year 2025</span>
+        </div>
+
+        <div class="summary-card" style="border-top: 4px solid green;">
+            <h3>Healthcare Peak</h3>
+            <p style="color: green;">260</p>
+            <span>Year 2025</span>
+        </div>
+
+        <div class="summary-card" style="border-top: 4px solid orange;">
+            <h3>Education Peak</h3>
+            <p style="color: orange;">185</p>
+            <span>Year 2025</span>
+        </div>
+    </div>
+
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
